@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Quiz</string>
+    <string name="user_question">Enter in the question</string>
 </resources>
