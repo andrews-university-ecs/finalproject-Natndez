@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Quiz</string>
-    <string name="user_question">Enter in the question</string>
+    <string name="user_question">Enter in your question</string>
+    <string name="quiz_mode">Enter Quiz Mode</string>
+    <string name="questions_editor">Enter the Question Editor</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
