@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
 *   Manage information for any specified quiz question
 */
-public class Quiz {
+public class QuizEditor {
     //Unique ID for question
     private UUID mId;
 
@@ -43,4 +43,6 @@ public class Quiz {
     public void setQuestion(String question){
         mQuestion = question;
     }
+
+    //TODO: Set up a method for the question answers (true/false)
 }

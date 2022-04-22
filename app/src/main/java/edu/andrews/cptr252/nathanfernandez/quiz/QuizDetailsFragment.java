@@ -28,7 +28,7 @@ public class QuizDetailsFragment extends Fragment {
     /**
      * Quiz Question that is being viewed or edited
      */
-    private Quiz mQuiz;
+    private QuizEditor mQuiz;
     /**
      * Reference to title field for quiz question
      */
@@ -70,7 +70,7 @@ public class QuizDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mQuiz = new Quiz(); //Creates new quiz question
+        mQuiz = new QuizEditor(); //Creates new quiz question
     }
 
     @Override
@@ -110,6 +110,8 @@ public class QuizDetailsFragment extends Fragment {
     }
 
 
+    //TODO: Figure out how to make a method for the question answers (true/false).
+    // Not important now, but will be for the quiz mode
     public void onRadioClick(View v) {
         //Is the button checked?
         boolean checked = ((RadioButton) v).isChecked();
