@@ -29,7 +29,6 @@
             android:layout_height="116dp"
             android:ems="10"
             android:hint="@string/user_question"
-            android:hintTextColor="#757575"
             android:inputType="textPersonName"
             tools:ignore="TextContrastCheck" />
 
@@ -41,6 +40,7 @@
             android:text="@string/answer_label" />
 
         <RadioGroup
+            android:id="@+id/rbGroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -50,16 +50,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/true_box"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="@string/true_box" />
 
             <RadioButton
                 android:id="@+id/false_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/false_box"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="@string/false_box" />
         </RadioGroup>
 
     </LinearLayout>

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,12 +21,19 @@ import android.widget.RadioButton;
  * create an instance of this fragment.
  */
 public class QuizDetailsFragment extends Fragment {
-    /** Tag for logging fragment messages */
+    /**
+     * Tag for logging fragment messages
+     */
     public static final String TAG = "QuizDetailsFragment";
-    /** Quiz Question that is being viewed or edited */
+    /**
+     * Quiz Question that is being viewed or edited
+     */
     private Quiz mQuiz;
-    /** Reference to title field for quiz question */
+    /**
+     * Reference to title field for quiz question
+     */
     private EditText mQuestionField;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,10 +69,7 @@ public class QuizDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
         mQuiz = new Quiz(); //Creates new quiz question
     }
 
@@ -72,6 +77,8 @@ public class QuizDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_quiz_details, container, false);
+
+
 
         //get reference to EditText box for the question
         mQuestionField = v.findViewById(R.id.question);
@@ -95,18 +102,20 @@ public class QuizDetailsFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 //intentionally left blank
             }
+
         });
 
         return v;
 
     }
 
-    public void onRadioButtonClicked(View view) {
+
+    public void onRadioClick(View v) {
         //Is the button checked?
-        boolean checked = ((RadioButton) view).isChecked();
+        boolean checked = ((RadioButton) v).isChecked();
 
         //Check which radio button was clicked
-        switch(view.getId()) {
+        switch(v.getId()) {
             case R.id.true_button:
                 if(checked)
                     break;
@@ -115,4 +124,7 @@ public class QuizDetailsFragment extends Fragment {
                     break;
         }
     }
+
+
+
 }
