@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,7 +96,23 @@ public class QuizDetailsFragment extends Fragment {
                 //intentionally left blank
             }
         });
+
         return v;
 
+    }
+
+    public void onRadioButtonClicked(View view) {
+        //Is the button checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        //Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.true_button:
+                if(checked)
+                    break;
+            case R.id.false_button:
+                if(checked)
+                    break;
+        }
     }
 }
