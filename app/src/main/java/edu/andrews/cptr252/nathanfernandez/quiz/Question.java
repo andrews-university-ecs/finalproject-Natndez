@@ -5,12 +5,15 @@ import java.util.UUID;
 /**
 *   Manage information for any specified quiz question
 */
-public class QuizEditor {
+public class Question {
     //Unique ID for question
     private UUID mId;
 
     //The question that the user will enter
     private String mQuestion;
+
+    /** Is the answer true or false? */
+    private boolean mAnswer;
 
     /**
      * Create and initialize new question
@@ -19,6 +22,10 @@ public class QuizEditor {
         //Generate unique id for new question
         mId = UUID.randomUUID();
     }
+
+    //setters and getters for question answer
+    public boolean isAnswer() { return mAnswer; }
+    public void setAnswer(boolean answer) { mAnswer = answer; }
 
     /**
      * Return unique Id for the question
@@ -44,5 +51,4 @@ public class QuizEditor {
         mQuestion = question;
     }
 
-    //TODO: Set up a method for the question answers (true/false)
 }

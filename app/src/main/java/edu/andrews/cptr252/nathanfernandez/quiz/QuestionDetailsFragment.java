@@ -10,25 +10,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link QuizDetailsFragment#newInstance} factory method to
+ * Use the {@link QuestionDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuizDetailsFragment extends Fragment {
+public class QuestionDetailsFragment extends Fragment {
     /**
      * Tag for logging fragment messages
      */
-    public static final String TAG = "QuizDetailsFragment";
+    public static final String TAG = "QuestionDetailsFragment";
     /**
      * Quiz Question that is being viewed or edited
      */
-    private QuizEditor mQuiz;
+    private Question mQuiz;
     /**
      * Reference to title field for quiz question
      */
@@ -44,7 +42,7 @@ public class QuizDetailsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public QuizDetailsFragment() {
+    public QuestionDetailsFragment() {
         // Required empty public constructor
     }
 
@@ -54,11 +52,11 @@ public class QuizDetailsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment QuizDetailsFragment.
+     * @return A new instance of fragment QuestionDetailsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static QuizDetailsFragment newInstance(String param1, String param2) {
-        QuizDetailsFragment fragment = new QuizDetailsFragment();
+    public static QuestionDetailsFragment newInstance(String param1, String param2) {
+        QuestionDetailsFragment fragment = new QuestionDetailsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -70,7 +68,7 @@ public class QuizDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mQuiz = new QuizEditor(); //Creates new quiz question
+        mQuiz = new Question(); //Creates new quiz question
     }
 
     @Override
@@ -112,7 +110,7 @@ public class QuizDetailsFragment extends Fragment {
 
     //TODO: Figure out how to make a method for the question answers (true/false).
     // Not important now, but will be for the quiz mode
-    public void onRadioClick(View v) {
+    public void onRadioButtonClicked(View v) {
         //Is the button checked?
         boolean checked = ((RadioButton) v).isChecked();
 
@@ -120,9 +118,11 @@ public class QuizDetailsFragment extends Fragment {
         switch(v.getId()) {
             case R.id.true_button:
                 if(checked)
+                    mQuiz.setAnswer(true);
                     break;
             case R.id.false_button:
                 if(checked)
+                    mQuiz.setAnswer(false);
                     break;
         }
     }

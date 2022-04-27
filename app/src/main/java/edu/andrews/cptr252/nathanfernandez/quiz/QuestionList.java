@@ -13,7 +13,7 @@ public class QuestionList {
     private static QuestionList sOurInstance;
 
     /** List of Questions */
-    private ArrayList<QuizEditor> mQuestions;
+    private ArrayList<Question> mQuestions;
 
     /** Reference to information about app environment */
     private Context mAppContext;
@@ -22,9 +22,9 @@ public class QuestionList {
     private QuestionList(Context appContext){
         mAppContext = appContext;
         mQuestions = new ArrayList<>();
-        for (int i=0; i < 100; i++) {
-            QuizEditor question = new QuizEditor();
-            question.setQuestion("Question #" + i+1);
+        for (int i=0; i < 10; i++) {
+            Question question = new Question();
+            question.setQuestion("Question #" + (i+1));
             mQuestions.add(question);
         }
     }
@@ -44,5 +44,5 @@ public class QuestionList {
      * Return List of Questions
      * @return Array of Question Objects
      */
-    public ArrayList<QuizEditor> getQuestions() {return mQuestions;}
+    public ArrayList<Question> getQuestions() {return mQuestions;}
 }
