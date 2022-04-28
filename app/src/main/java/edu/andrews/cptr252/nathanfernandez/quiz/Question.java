@@ -13,19 +13,19 @@ public class Question {
     private String mQuestion;
 
     /** Is the answer true or false? */
-    private boolean mAnswer;
+    private boolean mTrue;
 
     /**
      * Create and initialize new question
      */
-    public void Question() {
+    public Question() {
         //Generate unique id for new question
         mId = UUID.randomUUID();
     }
 
     //setters and getters for question answer
-    public boolean isAnswer() { return mAnswer; }
-    public void setAnswer(boolean answer) { mAnswer = answer; }
+    public boolean isTrue() { return mTrue; }
+    public void setTrue(boolean True) { mTrue = True; }
 
     /**
      * Return unique Id for the question

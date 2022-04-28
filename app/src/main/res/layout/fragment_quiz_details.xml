@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QuizDetailsFragment">
+    tools:context=".QuestionDetailsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,26 +39,12 @@
             android:fontFamily="sans-serif-black"
             android:text="@string/answer_label" />
 
-        <RadioGroup
-            android:id="@+id/rbGroup"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/true_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/true_box" />
-
-            <RadioButton
-                android:id="@+id/false_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/false_box" />
-        </RadioGroup>
+        <CheckBox
+            android:id="@+id/question_true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:text="@string/true_box" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

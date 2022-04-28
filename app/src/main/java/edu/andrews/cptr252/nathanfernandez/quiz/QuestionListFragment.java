@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.ListFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +31,10 @@ public class QuestionListFragment extends Fragment {
 
     public QuestionListFragment(){
         //Empty public constructor is required
+
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,5 +62,16 @@ public class QuestionListFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return v;
+    }
+
+    /**
+     * Question list fragment was paused (User was likely editing a question)
+     * Notify adapter that the data set (Question List) may have changed.
+     * The adapter should update the views
+     */
+    @Override
+    public void onResume() {
+        super.onResume(); // first execute parent's onResume method
+        mQuestionAdapter.notifyDataSetChanged();
     }
 }

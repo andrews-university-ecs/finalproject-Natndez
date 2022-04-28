@@ -2,6 +2,7 @@ package edu.andrews.cptr252.nathanfernandez.quiz;
 
 import android.content.Context;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /** Mange list of questions. This is a singleton
  * class. Only one instance of this class can
@@ -45,4 +46,17 @@ public class QuestionList {
      * @return Array of Question Objects
      */
     public ArrayList<Question> getQuestions() {return mQuestions;}
+
+    /**
+     * Return the question with a given id.
+     * @param id Unique id for the question
+     * @return The Question object or null if not found
+     */
+    public Question getQuestion(UUID id) {
+        for (Question question : mQuestions) {
+            if (question.getId().equals(id))
+                return question;
+        }
+        return null;
+    }
 }

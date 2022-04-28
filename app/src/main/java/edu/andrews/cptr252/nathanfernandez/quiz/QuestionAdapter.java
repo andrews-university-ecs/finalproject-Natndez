@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +18,7 @@ import java.util.ArrayList;
  */
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHolder> {
     private static final String TAG="QuestionAdapter";
+    public static final String EXTRA_QUESTION_ID="edu.andrews.cptr252.nathanfernandez.quiz.question_id";
 
     /** Used to store reference to list of questions */
     private ArrayList<Question> mQuestions;
@@ -36,12 +39,23 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
         /** Textview that displays question */
         public TextView questionTextView;
 
+        /** CheckBpx that displays whether the question is true or not */
+        public CheckBox questionTrueCheckBox;
+
+        /** Context hosting the view */
+        public Context mContext;
+
+
         /** Create a new view holder for a given view item in the bug list */
         public ViewHolder(View itemView) {
             super(itemView);
 
             //Stores reference to the widget on the view item
             questionTextView = itemView.findViewById(R.id.question_list_item_titleTextView);
+            questionTrueCheckBox = itemView.findViewById(R.id.question_list_item_trueCheckBox);
+
+            //Get the context of the view. This will be the activity hosting the view
+            mContext = itemView.getContext();
 
             itemView.setOnClickListener(this);
         }
@@ -58,7 +72,12 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
             //For now just display the question... will be able to open question in the future
             if (position != RecyclerView.NO_POSITION) {
                 Question question = mQuestions.get(position);
-                Log.d(TAG, question.getQuestion() + " was clicked");
+
+                // start an instance of QuestionDetailsFragment
+                Intent i = new Intent(mContext, QuestionDetailsActivity.class);
+                //pass the id of the question as an intent
+                i.putExtra(QuestionDetailsFragment.EXTRA_QUESTION_ID, question.getId());
+                mContext.startActivity(i);
             }
         }
     }
@@ -94,9 +113,11 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
 
         //Get reference to widgets stored in ViewHolder
         TextView questionTextView = viewHolder.questionTextView;
+        CheckBox questionTrueCheckBox = viewHolder.questionTrueCheckBox;
 
         // Update widgets on view with bug details
         questionTextView.setText(question.getQuestion());
+        questionTrueCheckBox.setChecked(question.isTrue());
     }
 
     /**

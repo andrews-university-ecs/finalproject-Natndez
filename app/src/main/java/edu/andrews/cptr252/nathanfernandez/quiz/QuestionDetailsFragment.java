@@ -10,8 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioButton;
+import android.widget.CheckBox;
+
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +22,9 @@ import android.widget.RadioButton;
  * create an instance of this fragment.
  */
 public class QuestionDetailsFragment extends Fragment {
+    /**  key used to pass the id of a question */
+    public static final String EXTRA_QUESTION_ID
+            = "edu.andrews.cptr252.nathanfernandez.quiz.question_id";
     /**
      * Tag for logging fragment messages
      */
@@ -26,11 +32,14 @@ public class QuestionDetailsFragment extends Fragment {
     /**
      * Quiz Question that is being viewed or edited
      */
-    private Question mQuiz;
+    private Question mQuestion;
     /**
      * Reference to title field for quiz question
      */
     private EditText mQuestionField;
+    /** Reference to Question is True Check Box */
+    private CheckBox mTrueCheckBox;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -47,28 +56,34 @@ public class QuestionDetailsFragment extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment QuestionDetailsFragment.
+     * Create a new QuestionDetailsFragment with a given Question ID as an argument
+     * @param questionId
+     * @return A reference to the new QuestionDetailsFragment
      */
-    // TODO: Rename and change types and number of parameters
-    public static QuestionDetailsFragment newInstance(String param1, String param2) {
+    public static QuestionDetailsFragment newInstance(UUID questionId) {
+        // Create new instance of QuestionDetailsFragment
         QuestionDetailsFragment fragment = new QuestionDetailsFragment();
+
+        // Create a new argument for the Bundle object
+        //Add the question id as an argument
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(EXTRA_QUESTION_ID, questionId);
+
+        //Pass the bundle (containing question id) to the fragment
+        // The bundle will be unpacked in the fragments onCreate(Bundle) method
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mQuiz = new Question(); //Creates new quiz question
+        //Extract Question id from Bundle
+        UUID questionId = (UUID)getArguments().getSerializable(QuestionAdapter.EXTRA_QUESTION_ID);
+
+        // Get the question with the id from the Bundle
+        //This will be the question that the fragment displays.
+        mQuestion = QuestionList.getInstance(getActivity()).getQuestion(questionId);
     }
 
     @Override
@@ -76,10 +91,9 @@ public class QuestionDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_quiz_details, container, false);
 
-
-
         //get reference to EditText box for the question
         mQuestionField = v.findViewById(R.id.question);
+        mQuestionField.setText(mQuestion.getQuestion());
         mQuestionField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
@@ -90,9 +104,9 @@ public class QuestionDetailsFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // user typed text, updates the question
-                mQuiz.setQuestion(s.toString());
+                mQuestion.setQuestion(s.toString());
                 // Write the new question to the message log for debugging
-                Log.d(TAG, "Question changed to " + mQuiz.getQuestion());
+                Log.d(TAG, "Question changed to " + mQuestion.getQuestion());
 
             }
 
@@ -101,32 +115,26 @@ public class QuestionDetailsFragment extends Fragment {
                 //intentionally left blank
             }
 
+
+
+        });
+
+        //Get reference to true check box
+        mTrueCheckBox = v.findViewById(R.id.question_true);
+        mTrueCheckBox.setChecked(mQuestion.isTrue());
+        //Toggle question true status when check box is tapped
+        mTrueCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                //set the question's solved property
+                mQuestion.setTrue(isChecked);
+                Log.d(TAG, "Set true statos to " + isChecked);
+            }
         });
 
         return v;
 
     }
-
-
-    //TODO: Figure out how to make a method for the question answers (true/false).
-    // Not important now, but will be for the quiz mode
-    public void onRadioButtonClicked(View v) {
-        //Is the button checked?
-        boolean checked = ((RadioButton) v).isChecked();
-
-        //Check which radio button was clicked
-        switch(v.getId()) {
-            case R.id.true_button:
-                if(checked)
-                    mQuiz.setAnswer(true);
-                    break;
-            case R.id.false_button:
-                if(checked)
-                    mQuiz.setAnswer(false);
-                    break;
-        }
-    }
-
-
 
 }
