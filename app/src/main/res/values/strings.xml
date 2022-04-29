@@ -10,4 +10,5 @@
     <string name="true_box">True</string>
     <string name="false_box">False</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_question">new Question</string>
 </resources>

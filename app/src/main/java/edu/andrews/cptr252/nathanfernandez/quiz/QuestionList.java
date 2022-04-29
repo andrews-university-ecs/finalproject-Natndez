@@ -23,11 +23,6 @@ public class QuestionList {
     private QuestionList(Context appContext){
         mAppContext = appContext;
         mQuestions = new ArrayList<>();
-        for (int i=0; i < 10; i++) {
-            Question question = new Question();
-            question.setQuestion("Question #" + (i+1));
-            mQuestions.add(question);
-        }
     }
     /**
      * Return one and only instance of the bug list.
@@ -58,5 +53,12 @@ public class QuestionList {
                 return question;
         }
         return null;
+    }
+    /**
+     * Add a question to the list
+     * @param question is the question to add.
+     */
+    public void addQuestion(Question question) {
+        mQuestions.add(question);
     }
 }

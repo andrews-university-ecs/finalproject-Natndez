@@ -1,8 +1,12 @@
 package edu.andrews.cptr252.nathanfernandez.quiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,9 +40,14 @@ public class QuestionListFragment extends Fragment {
 
 
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
+
         getActivity().setTitle(R.string.quizEditor_label);
         mQuestions = QuestionList.getInstance(getActivity()).getQuestions();
 
@@ -73,5 +82,40 @@ public class QuestionListFragment extends Fragment {
     public void onResume() {
         super.onResume(); // first execute parent's onResume method
         mQuestionAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Create a new question, add it to the list and launch the question editor
+     */
+    private void addQuestion() {
+        // Create a new question
+        Question question = new Question();
+        // add a question to the list
+        QuestionList.getInstance(getActivity()).addQuestion(question);
+        // create an intent to send to QuestionDetailsActivity
+        // add the question Id as an extra so QuestionDetailsFragment can edit it.
+        Intent intent = new Intent(getActivity(), QuestionDetailsActivity.class);
+        intent.putExtra(QuestionDetailsFragment.EXTRA_QUESTION_ID, question.getId());
+        // launch QuestionDetailsActivity which will launch QuestionDetailsFragment
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_question_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_add_question:
+                // new question icon clicked
+                addQuestion();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
