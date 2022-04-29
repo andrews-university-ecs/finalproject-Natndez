@@ -99,4 +99,21 @@ public class QuestionList {
         mQuestions.add(question);
         saveQuestions();
     }
+    /**
+     * Add a question the the list at a given position
+     * @param position is the index for the bug to add
+     * @parm quesiton is the question to add
+     */
+    public void addQuestion(int position, Question question) {
+        mQuestions.add(position, question);
+        saveQuestions();
+    }
+    /**
+     * Delete a given question from the list of questions
+     * @param position is the index of the question to delete
+     */
+    public void deleteQuestion(int position) {
+        mQuestions.remove(position);
+        saveQuestions();
+    }
 }
