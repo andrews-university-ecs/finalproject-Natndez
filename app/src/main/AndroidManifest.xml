@@ -5,21 +5,30 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Menu"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Quiz">
         <activity
-            android:name=".QuestionListActivity"
+            android:name=".QuizMenuActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".QuestionListActivity">
+        </activity>
+        <activity
             android:name=".QuestionDetailsActivity">
+        </activity>
+
+        <activity
+            android:label="Quiz Mode"
+            android:name=".QuizModeActivity">
+
         </activity>
     </application>
 
