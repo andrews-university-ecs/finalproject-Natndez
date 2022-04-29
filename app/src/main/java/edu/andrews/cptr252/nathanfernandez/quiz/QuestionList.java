@@ -1,6 +1,8 @@
 package edu.andrews.cptr252.nathanfernandez.quiz;
 
 import android.content.Context;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -19,10 +21,45 @@ public class QuestionList {
     /** Reference to information about app environment */
     private Context mAppContext;
 
+    /** Tag for message log */
+    private static final String TAG = "QuestionList";
+    /** name of JSON file containing list of questions */
+    private static final String FILENAME = "questions.json";
+    /** Reference to JSON serializer for a list of questions */
+    private QuestionJSONSerializer mSerializer;
+
+    /**
+     * Write question list to JSON file.
+     * @return true if successful, false otherwise
+     */
+    public boolean saveQuestions() {
+        try {
+            mSerializer.saveQuestions(mQuestions);
+            Log.d(TAG, "Questions saved to file");
+            return true;
+        } catch (Exception e) {
+            Log.e(TAG, "Error saving questions: " + e);
+            return false;
+        }
+    }
+
     /** Private Constructor */
     private QuestionList(Context appContext){
         mAppContext = appContext;
-        mQuestions = new ArrayList<>();
+
+        // create our serializer to load and save questions
+        mSerializer = new QuestionJSONSerializer(mAppContext, FILENAME);
+
+        try {
+            // load questions from JSON File
+            mQuestions = mSerializer.loadQuestions();
+        } catch (Exception e) {
+            // unable to load from file, so create empty question list
+            // either file does not exist (that's fine)
+            // or file containts error (not ideal)
+            mQuestions = new ArrayList<>();
+            Log.e(TAG, "Error loading questions: " + e);
+        }
     }
     /**
      * Return one and only instance of the bug list.
@@ -60,5 +97,6 @@ public class QuestionList {
      */
     public void addQuestion(Question question) {
         mQuestions.add(question);
+        saveQuestions();
     }
 }

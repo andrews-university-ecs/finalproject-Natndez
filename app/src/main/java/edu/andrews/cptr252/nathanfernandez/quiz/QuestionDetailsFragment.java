@@ -86,6 +86,7 @@ public class QuestionDetailsFragment extends Fragment {
         mQuestion = QuestionList.getInstance(getActivity()).getQuestion(questionId);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -135,6 +136,15 @@ public class QuestionDetailsFragment extends Fragment {
 
         return v;
 
+    }
+
+    /**
+     * Save the question list to a JSON file when app is paused
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        QuestionList.getInstance(getActivity()).saveQuestions();
     }
 
 }
