@@ -55,10 +55,6 @@ public class QuestionListFragment extends Fragment {
         // use our custom question adapter for generating views for each question
         mQuestionAdapter = new QuestionAdapter(mQuestions, getActivity());
 
-        //for now, we'll be listing questions in log
-        for(Question quiz: mQuestions){
-            Log.d(TAG, quiz.getQuestion());
-        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,7 +83,7 @@ public class QuestionListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume(); // first execute parent's onResume method
-        mQuestionAdapter.notifyDataSetChanged();
+        mQuestionAdapter.refreshQuestionListDisplay();
     }
 
     /**

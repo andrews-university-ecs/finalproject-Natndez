@@ -48,8 +48,10 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
      * @param position in list where question will go
      */
     public void restoreQuestion(Question question, int position) {
-        QuestionList.getInstance(mActivity).addQuestion(position, question);
-        notifyItemInserted(position);
+        //QuestionList.getInstance(mActivity).addQuestion(position, question);
+        //notifyItemInserted(position);
+
+        refreshQuestionListDisplay();
     }
     /**
      * Create a snackbar with ability to undo question deletion
@@ -70,6 +72,18 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
             restoreQuestion(question, position);
             }
         });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    // Officially delete question from question list
+                    QuestionList.getInstance(mActivity).deleteQuestion(question);
+                }
+            }
+        });
+
         // Text for UNDO will be yello
         snackbar.setActionTextColor(Color.YELLOW);
         // display snackbar
@@ -83,12 +97,19 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.ViewHo
     public void deleteQuestion(int position) {
         // save deleted question so we can undo if needed.
         final Question question = mQuestions.get(position);
-        // delete question from list
-        QuestionList.getInstance(mActivity).deleteQuestion(position);
-        // ipdate list of questions in recyclerview
+
+        // Delete question from question array used by adapter (not official list)
+        mQuestions.remove(position);
+
+        // update list of questions in recyclerview
         notifyItemRemoved(position);
         // display snackbar so user may undo delete
         showUndoSnackbar(question, position);
+    }
+    /** Force adapter to load new question list and regenerate views */
+    public void refreshQuestionListDisplay() {
+        mQuestions = QuestionList.getInstance(mActivity).getQuestions();
+        notifyDataSetChanged();
     }
 
     /**

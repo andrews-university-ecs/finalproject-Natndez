@@ -51,12 +51,14 @@ public class Question {
         return jsonObject;
     }
 
+    public Question(UUID id) {
+        mId = id;
+    }
     /**
      * Create and initialize new question
      */
     public Question() {
-        //Generate unique id for new question
-        mId = UUID.randomUUID();
+        this(UUID.randomUUID());
     }
 
     //setters and getters for question answer

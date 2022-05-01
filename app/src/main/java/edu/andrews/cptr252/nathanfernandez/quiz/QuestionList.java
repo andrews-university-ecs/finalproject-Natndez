@@ -1,5 +1,13 @@
 package edu.andrews.cptr252.nathanfernandez.quiz;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import edu.andrews.cptr252.nathanfernandez.quiz.database.QuestionCursorWrapper;
+import edu.andrews.cptr252.nathanfernandez.quiz.database.QuestionDbHelper;
+import edu.andrews.cptr252.nathanfernandez.quiz.database.QuestionDbSchema.QuestionTable;
+
+
 import android.content.Context;
 import android.util.Log;
 
@@ -16,7 +24,42 @@ public class QuestionList {
     private static QuestionList sOurInstance;
 
     /** List of Questions */
-    private ArrayList<Question> mQuestions;
+    //private ArrayList<Question> mQuestions;
+    /** SQLite DB where questions are stored */
+    private SQLiteDatabase mDatabase;
+
+    /**
+     * Pack bug information into a ContentValues object
+     * @param question to pack
+     * @return resulting contentValues object
+     */
+    public static ContentValues getContentValues(Question question) {
+        ContentValues values = new ContentValues();
+        values.put(QuestionTable.Cols.UUID, question.getId().toString());
+        values.put(QuestionTable.Cols.QUESTION, question.getQuestion());
+        values.put(QuestionTable.Cols.TRUE, question.isTrue() ? 1 : 0);
+
+        return values;
+    }
+
+    /**
+     * Build a query for Question DB.
+     * @param whereClause defines the where clause of a SQL query
+     * @param whereArgs defines where arguments for a SQL query
+     * @return Object defining a SQL query
+     */
+    private QuestionCursorWrapper queryQuestions(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                QuestionTable.NAME,
+                null,     // Columns - null selects all columns
+                whereClause,
+                whereArgs,
+                null,     // groupBy
+                null,     // having
+                null      // orderBy
+        );
+        return new QuestionCursorWrapper(cursor);
+    }
 
     /** Reference to information about app environment */
     private Context mAppContext;
@@ -28,38 +71,15 @@ public class QuestionList {
     /** Reference to JSON serializer for a list of questions */
     private QuestionJSONSerializer mSerializer;
 
-    /**
-     * Write question list to JSON file.
-     * @return true if successful, false otherwise
-     */
-    public boolean saveQuestions() {
-        try {
-            mSerializer.saveQuestions(mQuestions);
-            Log.d(TAG, "Questions saved to file");
-            return true;
-        } catch (Exception e) {
-            Log.e(TAG, "Error saving questions: " + e);
-            return false;
-        }
-    }
 
     /** Private Constructor */
     private QuestionList(Context appContext){
-        mAppContext = appContext;
+       // mAppContext = appContext;
+        mAppContext = appContext.getApplicationContext();
 
-        // create our serializer to load and save questions
-        mSerializer = new QuestionJSONSerializer(mAppContext, FILENAME);
-
-        try {
-            // load questions from JSON File
-            mQuestions = mSerializer.loadQuestions();
-        } catch (Exception e) {
-            // unable to load from file, so create empty question list
-            // either file does not exist (that's fine)
-            // or file containts error (not ideal)
-            mQuestions = new ArrayList<>();
-            Log.e(TAG, "Error loading questions: " + e);
-        }
+        // open DB file or create it if itdoes not already exist
+        // if the DB is older version, onUpgrade will be called
+        mDatabase = new QuestionDbHelper(mAppContext).getWritableDatabase();
     }
     /**
      * Return one and only instance of the bug list.
@@ -77,7 +97,21 @@ public class QuestionList {
      * Return List of Questions
      * @return Array of Question Objects
      */
-    public ArrayList<Question> getQuestions() {return mQuestions;}
+    public ArrayList<Question> getQuestions() {
+        ArrayList<Question> questions = new ArrayList<>();
+        QuestionCursorWrapper cursor = queryQuestions(null, null);
+
+        try{
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                questions.add(cursor.getQuestion());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return questions;
+    }
 
     /**
      * Return the question with a given id.
@@ -85,35 +119,47 @@ public class QuestionList {
      * @return The Question object or null if not found
      */
     public Question getQuestion(UUID id) {
-        for (Question question : mQuestions) {
-            if (question.getId().equals(id))
-                return question;
+        QuestionCursorWrapper cursor = queryQuestions(QuestionTable.Cols.UUID + " = ? ",
+                new String[] {id.toString()});
+
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+            cursor.moveToFirst();
+            return cursor.getQuestion();
+        } finally {
+            cursor.close();
         }
-        return null;
     }
     /**
      * Add a question to the list
      * @param question is the question to add.
      */
     public void addQuestion(Question question) {
-        mQuestions.add(question);
-        saveQuestions();
+        ContentValues values = getContentValues(question);
+        mDatabase.insert(QuestionTable.NAME, null, values);
     }
-    /**
-     * Add a question the the list at a given position
-     * @param position is the index for the bug to add
-     * @parm quesiton is the question to add
-     */
-    public void addQuestion(int position, Question question) {
-        mQuestions.add(position, question);
-        saveQuestions();
-    }
+
     /**
      * Delete a given question from the list of questions
-     * @param position is the index of the question to delete
      */
-    public void deleteQuestion(int position) {
-        mQuestions.remove(position);
-        saveQuestions();
+    public void deleteQuestion(Question question) {
+        String uuidString = question.getId().toString();
+        mDatabase.delete(QuestionTable.NAME,
+                QuestionTable.Cols.UUID + " = ? ",
+                new String[] { uuidString} );
+    }
+    /**
+     * Update information for a given bug.
+     * @param question contains the latest information for the bug.
+     */
+    public void updateQuestion(Question question) {
+        String uuidString = question.getId().toString();
+        ContentValues values = getContentValues(question);
+
+        mDatabase.update(QuestionTable.NAME, values,
+                QuestionTable.Cols.UUID + " = ? ",
+                new String[] { uuidString} );
     }
 }
